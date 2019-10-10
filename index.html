@@ -31,8 +31,11 @@
 
 	function generate_key(key) {
 		key = key.toUpperCase();
-		key = key.replace(/\s/g, "X")
+		key = key.replace(/\s/g, "") //remove whitespace
+		key = key.replace(/[^a-zA-Z ]/g, ""); //remove unique character
+		key = key.replace(/J/g, "I"); // remove j => i
 		key = removeDuplicateCharacters(key);
+		
 		var abjad = ["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 		abjad = abjad.filter(val => !key.includes(val));
 		key = Array.from(key);
@@ -61,4 +64,5 @@ https://stackoverflow.com/questions/6507056/replace-all-whitespace-characters/65
 https://stackoverflow.com/questions/14930516/compare-two-javascript-arrays-and-remove-duplicates
 https://stackoverflow.com/questions/1584370/how-to-merge-two-arrays-in-javascript-and-de-duplicate-items
 https://stackoverflow.com/questions/13272406/convert-string-with-commas-to-array
-https://stackoverflow.com/questions/22464605/convert-a-1d-array-to-2d-array -->
+https://stackoverflow.com/questions/22464605/convert-a-1d-array-to-2d-array
+https://stackoverflow.com/questions/6555182/remove-all-special-characters-except-space-from-a-string-using-javascript/6555220  -->
