@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+	<div>
+		Play Fair Cipher
+	</div>
+	<form>
+	  <div class="form-group">
+	    <label for="exampleInputEmail1">Key</label>
+	    <input type="text" class="form-control" id="key" aria-describedby="key" placeholder="Key">
+	  </div>
+	  <div class="form-group">
+	    <label for="exampleInputPassword1">Plain Text</label>
+	    <input type="text" class="form-control" id="plainText" placeholder="Plain Text">
+	  </div>
+	  <button type="button" class="btn btn-primary" onclick="enkrip()">Submit</button>
+	</form>
+</body>
+<script>
+	function enkrip() {
+		var key = document.getElementById("key").value;
+		box = generate_key(key);
+		var plain_text = document.getElementById("plainText").value;
+		console.log(box);
+	}
+
+	function generate_key(key) {
+		key = key.toUpperCase();
+		key = key.replace(/\s/g, "X")
+		key = removeDuplicateCharacters(key);
+		var abjad = ["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+		abjad = abjad.filter(val => !key.includes(val));
+		key = Array.from(key);
+		key = key.concat(abjad);
+
+		var box = [];
+		while(key.length) box.push(key.splice(0,5));
+		console.log(box);
+		return "andhika";
+	}
+
+	function removeDuplicateCharacters(string) {
+	  	return string.split('').filter(function(item, pos, self) {
+	      return self.indexOf(item) == pos;
+	    })
+	    .join('');
+	}
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html>
+
+<!-- https://stackoverflow.com/questions/13841217/remove-duplicate-characters-from-string
+https://stackoverflow.com/questions/6507056/replace-all-whitespace-characters/6507078 
+https://stackoverflow.com/questions/14930516/compare-two-javascript-arrays-and-remove-duplicates
+https://stackoverflow.com/questions/1584370/how-to-merge-two-arrays-in-javascript-and-de-duplicate-items
+https://stackoverflow.com/questions/13272406/convert-string-with-commas-to-array
+https://stackoverflow.com/questions/22464605/convert-a-1d-array-to-2d-array -->
