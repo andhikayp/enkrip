@@ -24,13 +24,19 @@
 	    <input type="text" class="form-control" id="key" aria-describedby="key" placeholder="Key">
 	  </div>
 	  <div class="form-group">
-	    <label for="exampleInputPassword1">Plain Text</label>
-	    <input type="text" class="form-control" id="plainText" placeholder="Plain Text">
+	    <label for="exampleInputPassword1">Text yang mau di enkrip atau dekrip</label>
+	    <input type="text" class="form-control" id="plainText" placeholder="Text">
 	  </div>
-	  <button type="button" class="btn btn-primary" onclick="enkrip()">Submit</button>
-	  <button type="button" class="btn btn-primary" onclick="showTable()">Lihat Tabel</button>
+	  <div>
+	  	<button type="button" class="btn btn-primary" onclick="enkrip()">Enkrip</button>
+	  	<button type="button" class="btn btn-primary" onclick="dekrip()">Dekrip</button>
+	  	<button type="button" class="btn btn-primary" onclick="showTable()">Lihat Tabel</button>
+	  </div>
 	  <div id="tabel">
 	  	<table id="kotak"></table>
+	  </div>
+	  <div class="form-group">
+	    <p id="hasil"></p>
 	  </div>
 	  
 	  
@@ -38,44 +44,148 @@
 </body>
 <script>
 	function enkrip() {
+		
 		var key = document.getElementById("key").value;
 		box = generate_key(key);
 		var plain_text = document.getElementById("plainText").value;
 		var hasil = enkrip_play_fair(box, plain_text); 
-		console.log(box);
+		console.log(hasil);
+		document.getElementById("hasil").innerHTML = hasil;
+		return true;
 	}
-
+	function dekrip() {
+		
+		var key = document.getElementById("key").value;
+		box = generate_key(key);
+		var plain_text = document.getElementById("plainText").value;
+		var hasil = dekrip_play_fair(box, plain_text); 
+		console.log(hasil);
+		document.getElementById("hasil").innerHTML = hasil;
+		return true;
+	}
 	function generate_key(key) {
 		key = key.toUpperCase();
 		key = key.replace(/\s/g, "") //remove whitespace
 		key = key.replace(/[^a-zA-Z ]/g, ""); //remove unique character
 		key = key.replace(/J/g, "I"); // remove j => i
 		key = removeDuplicateCharacters(key);
-
 		var abjad = ["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 		abjad = abjad.filter(val => !key.includes(val));
 		key = Array.from(key);
 		key = key.concat(abjad);
-
 		var box = [];
 		while(key.length) box.push(key.splice(0,5));
 		console.log(box);
 		return box;
 	}
-
 	function removeDuplicateCharacters(string) {
 	  	return string.split('').filter(function(item, pos, self) {
 	      return self.indexOf(item) == pos;
 	    })
 	    .join('');
 	}
-
 	function enkrip_play_fair(box, plain_text) {
+		var row, col, x1,y1,x2,y2, hasil=[];
+		plain_text = plain_text.toUpperCase();
+		plain_text = plain_text.replace(/\s/g, "") //remove whitespace
+		plain_text = plain_text.replace(/[^a-zA-Z ]/g, ""); //remove unique character
+		plain_text = plain_text.replace(/J/g, "I"); // remove j => i
+		for(i=0; i<plain_text.length; i+=2)
+		{
+			console.log(plain_text.length-i);
+			if(plain_text.length-i==1)
+			{
+				console.log("hehe");
+				plain_text+="X";
+			}
+			if(plain_text[i]==plain_text[i+1])
+			{
+				plain_text = [plain_text.slice(0, i+1), 'X', plain_text.slice(i+1)].join('');
+			}
+
+			for(row=0; row<box.length; row++)
+			{
+				for (col = 0; col < box[row].length; col++){
+					if(box[row][col]==plain_text[i])
+					{
+						y1=row;//y
+						x1=col;//x
+					}
+					if(box[row][col]==plain_text[i+1])
+					{
+						y2=row;//y
+						x2=col;//x
+					}
+				}
+			}
+			if(x1==x2)
+			{
+				hasil=hasil+box[(y1+1)%5][x1]+box[(y2+1)%5][x2];
+			}
+			else if(y1==y2)
+			{
+				hasil=hasil+box[y1][(x1+1)%5]+box[y2][(x2+1)%5];
+			}
+			else
+			{
+				hasil=hasil+box[y1][x2]+box[y2][x1];
+			}
+		}
 		
-		return true;
+		
+		return hasil;
 	}
+	function dekrip_play_fair(box, plain_text) {
+		var row, col, x1,y1,x2,y2, hasil=[];
+		plain_text = plain_text.toUpperCase();
+		plain_text = plain_text.replace(/\s/g, "") //remove whitespace
+		plain_text = plain_text.replace(/[^a-zA-Z ]/g, ""); //remove unique character
+		plain_text = plain_text.replace(/J/g, "I"); // remove j => i
+		for(i=0; i<plain_text.length; i+=2)
+		{
+			console.log(plain_text.length-i);
+			if(plain_text.length-i==1)
+			{
+				console.log("hehe");
+				plain_text+="X";
+			}
+			if(plain_text[i]==plain_text[i+1])
+			{
+				plain_text = [plain_text.slice(0, i+1), 'X', plain_text.slice(i+1)].join('');
+			}
 
-
+			for(row=0; row<box.length; row++)
+			{
+				for (col = 0; col < box[row].length; col++){
+					if(box[row][col]==plain_text[i])
+					{
+						y1=row;//y
+						x1=col;//x
+					}
+					if(box[row][col]==plain_text[i+1])
+					{
+						y2=row;//y
+						x2=col;//x
+					}
+				}
+			}
+			if(x1==x2)
+			{
+				hasil=hasil+box[(y1-1)%5][x1]+box[(y2-1)%5][x2];
+			}
+			else if(y1==y2)
+			{
+				hasil=hasil+box[y1][(x1-1)%5]+box[y2][(x2-1)%5];
+			}
+			else
+			{
+				hasil=hasil+box[y1][x2]+box[y2][x1];
+			}
+		}
+		
+		
+		return hasil;
+	}
 	function showTable(){
 		document.getElementById("kotak").remove();
 		var row, tr, td, tn;
