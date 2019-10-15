@@ -29,7 +29,9 @@
 	  </div>
 	  <button type="button" class="btn btn-primary" onclick="enkrip()">Submit</button>
 	  <button type="button" class="btn btn-primary" onclick="showTable()">Lihat Tabel</button>
-	  <div id="tabel"></div>
+	  <div id="tabel">
+	  	<table id="kotak"></table>
+	  </div>
 	  
 	  
 	</form>
@@ -75,10 +77,12 @@
 
 
 	function showTable(){
+		document.getElementById("kotak").remove();
 		var row, tr, td, tn;
 		var key = document.getElementById("key").value;
 		box = generate_key(key);
 		var tab = document.createElement('table');
+		tab.setAttribute("id", "kotak");
 		for (row = 0; row < box.length; row++){
 			tr = document.createElement('tr');
 			for (col = 0; col < box[row].length; col++){
