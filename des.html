@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<style>
+		table {
+		  border: 1px dashed red;
+		}
+		td  {
+		  border: 1px dashed blue;
+		  padding: 10px;
+		}
+	  </style>
+</head>
+<body>
+	<div>
+		DES Algoritma
+	</div>
+	<form>
+	  <div class="form-group">
+	    <label for="exampleInputEmail1">Key</label>
+	    <input type="text" class="form-control" id="key" aria-describedby="key" placeholder="Key">
+	  </div>
+	  <div class="form-group">
+	    <label for="exampleInputPassword1">Plain Text</label>
+	    <input type="text" class="form-control" id="plainText" placeholder="Plain Text">
+	  </div>
+	  <button type="button" class="btn btn-primary" onclick="enkrip()">Submit</button>
+	  <!-- <button type="button" class="btn btn-primary" onclick="showTable()">Lihat Tabel</button> -->
+	  <div id="tabel">
+	  	<table id="kotak"></table>
+	  </div>
+	  
+	  
+	</form>
+</body>
+<script>
+	function enkrip() {
+		var key = document.getElementById("key").value;
+		biner = generate_to_biner(key)
+	}
+
+	function generate_to_biner(key) {
+		var biner = []
+		for (var i = 0; i < key.length; i++) {
+		    x = key[i].charCodeAt(0).toString(2);
+		    biner.push(new Array(8-x.length+1).join("0") + x);
+		}
+		return biner
+	}
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html>
+
+<!-- https://stackoverflow.com/questions/14430633/how-to-convert-text-to-binary-code-in-javascript -->
