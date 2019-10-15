@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<style>
+		table {
+		  border: 1px dashed red;
+		}
+		td  {
+		  border: 1px dashed blue;
+		  padding: 10px;
+		}
+	  </style>
+</head>
+<body>
+	<div>
+		Play Fair Cipher
+	</div>
+	<form>
+	  <div class="form-group">
+	    <label for="exampleInputEmail1">Key</label>
+	    <input type="text" class="form-control" id="key" aria-describedby="key" placeholder="Key">
+	  </div>
+	  <div class="form-group">
+	    <label for="exampleInputPassword1">Text yang mau di enkrip atau dekrip</label>
+	    <input type="text" class="form-control" id="plainText" placeholder="Text">
+	  </div>
+	  <div>
+	  	<button type="button" class="btn btn-primary" onclick="enkrip()">Enkrip</button>
+	  	<button type="button" class="btn btn-primary" onclick="dekrip()">Dekrip</button>
+	  	<button type="button" class="btn btn-primary" onclick="showTable()">Lihat Tabel</button>
+	  </div>
+	  <div id="tabel">
+	  	<table id="kotak"></table>
+	  </div>
+	  <div class="form-group">
+	    <p id="hasil"></p>
+	  </div>
+	  
+	  
+	</form>
+</body>
+<script>
+	function enkrip() {
+		
+		var key = document.getElementById("key").value;
+		box = generate_key(key);
+		var plain_text = document.getElementById("plainText").value;
+		var hasil = enkrip_play_fair(box, plain_text); 
+		console.log(hasil);
+		document.getElementById("hasil").innerHTML = hasil;
+		return true;
+	}
+	function dekrip() {
+		
+		var key = document.getElementById("key").value;
+		box = generate_key(key);
+		var plain_text = document.getElementById("plainText").value;
+		var hasil = dekrip_play_fair(box, plain_text); 
+		console.log(hasil);
+		document.getElementById("hasil").innerHTML = hasil;
+		return true;
+	}
+	function generate_key(key) {
+		key = key.toUpperCase();
+		key = key.replace(/\s/g, "") //remove whitespace
+		key = key.replace(/[^a-zA-Z ]/g, ""); //remove unique character
+		key = key.replace(/J/g, "I"); // remove j => i
+		key = removeDuplicateCharacters(key);
+		var abjad = ["A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+		abjad = abjad.filter(val => !key.includes(val));
+		key = Array.from(key);
+		key = key.concat(abjad);
+		var box = [];
+		while(key.length) box.push(key.splice(0,5));
+		console.log(box);
+		return box;
+	}
+	function removeDuplicateCharacters(string) {
+	  	return string.split('').filter(function(item, pos, self) {
+	      return self.indexOf(item) == pos;
+	    })
+	    .join('');
+	}
+	function enkrip_play_fair(box, plain_text) {
+		var row, col, x1,y1,x2,y2, hasil=[];
+		plain_text = plain_text.toUpperCase();
+		plain_text = plain_text.replace(/\s/g, "") //remove whitespace
+		plain_text = plain_text.replace(/[^a-zA-Z ]/g, ""); //remove unique character
+		plain_text = plain_text.replace(/J/g, "I"); // remove j => i
+		for(i=0; i<plain_text.length; i+=2)
+		{
+			console.log(plain_text.length-i);
+			if(plain_text.length-i==1)
+			{
+				console.log("hehe");
+				plain_text+="X";
+			}
+			if(plain_text[i]==plain_text[i+1])
+			{
+				plain_text = [plain_text.slice(0, i+1), 'X', plain_text.slice(i+1)].join('');
+			}
+
+			for(row=0; row<box.length; row++)
+			{
+				for (col = 0; col < box[row].length; col++){
+					if(box[row][col]==plain_text[i])
+					{
+						y1=row;//y
+						x1=col;//x
+					}
+					if(box[row][col]==plain_text[i+1])
+					{
+						y2=row;//y
+						x2=col;//x
+					}
+				}
+			}
+			if(x1==x2)
+			{
+				hasil=hasil+box[(y1+1)%5][x1]+box[(y2+1)%5][x2];
+			}
+			else if(y1==y2)
+			{
+				hasil=hasil+box[y1][(x1+1)%5]+box[y2][(x2+1)%5];
+			}
+			else
+			{
+				hasil=hasil+box[y1][x2]+box[y2][x1];
+			}
+		}
+		
+		
+		return hasil;
+	}
+	function dekrip_play_fair(box, plain_text) {
+		var row, col, x1,y1,x2,y2, hasil=[];
+		plain_text = plain_text.toUpperCase();
+		plain_text = plain_text.replace(/\s/g, "") //remove whitespace
+		plain_text = plain_text.replace(/[^a-zA-Z ]/g, ""); //remove unique character
+		plain_text = plain_text.replace(/J/g, "I"); // remove j => i
+		for(i=0; i<plain_text.length; i+=2)
+		{
+			console.log(plain_text.length-i);
+			if(plain_text.length-i==1)
+			{
+				console.log("hehe");
+				plain_text+="X";
+			}
+			if(plain_text[i]==plain_text[i+1])
+			{
+				plain_text = [plain_text.slice(0, i+1), 'X', plain_text.slice(i+1)].join('');
+			}
+
+			for(row=0; row<box.length; row++)
+			{
+				for (col = 0; col < box[row].length; col++){
+					if(box[row][col]==plain_text[i])
+					{
+						y1=row;//y
+						x1=col;//x
+					}
+					if(box[row][col]==plain_text[i+1])
+					{
+						y2=row;//y
+						x2=col;//x
+					}
+				}
+			}
+			if(x1==x2)
+			{
+				hasil=hasil+box[(y1-1)%5][x1]+box[(y2-1)%5][x2];
+			}
+			else if(y1==y2)
+			{
+				hasil=hasil+box[y1][(x1-1)%5]+box[y2][(x2-1)%5];
+			}
+			else
+			{
+				hasil=hasil+box[y1][x2]+box[y2][x1];
+			}
+		}
+		
+		
+		return hasil;
+	}
+	function showTable(){
+		document.getElementById("kotak").remove();
+		var row, tr, td, tn;
+		var key = document.getElementById("key").value;
+		box = generate_key(key);
+		var tab = document.createElement('table');
+		tab.setAttribute("id", "kotak");
+		for (row = 0; row < box.length; row++){
+			tr = document.createElement('tr');
+			for (col = 0; col < box[row].length; col++){
+			td = document.createElement('td');
+			tn = document.createTextNode(box[row][col]);
+			td.appendChild(tn);
+			tr.appendChild(td);
+			}
+			tab.appendChild(tr);
+		}
+		document.getElementById("tabel").appendChild(tab);
+	}
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html>
+
+<!-- https://stackoverflow.com/questions/13841217/remove-duplicate-characters-from-string
+https://stackoverflow.com/questions/6507056/replace-all-whitespace-characters/6507078 
+https://stackoverflow.com/questions/14930516/compare-two-javascript-arrays-and-remove-duplicates
+https://stackoverflow.com/questions/1584370/how-to-merge-two-arrays-in-javascript-and-de-duplicate-items
+https://stackoverflow.com/questions/13272406/convert-string-with-commas-to-array
+https://stackoverflow.com/questions/22464605/convert-a-1d-array-to-2d-array
+https://stackoverflow.com/questions/6555182/remove-all-special-characters-except-space-from-a-string-using-javascript/6555220  -->
