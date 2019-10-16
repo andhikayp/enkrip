@@ -39,12 +39,10 @@
 		var plainText = document.getElementById("plainText").value;
 		plainText = plain(plainText)
 		// console.log(plainText)
-
 		var key=document.getElementById("key").value;
 		var keyBaru=keying(key)
 		console.log(keyBaru)
 		// plainText = generate_to_biner(plainText)
-
 		// plain =  plainText.join('')
 		// if (plain.length<64) {
 		// 	var selisih = 64 - plain.length 
@@ -54,7 +52,6 @@
 		// // console.log(plain)
 		// plain = getPermutasion(permutasion_first, plain)
 	}
-
 	function generate_desimal_to_biner(key) {
 		var biner = []
 		for (var i = 0; i < key.length; i++) {
@@ -63,11 +60,9 @@
 		}
 		return biner
 	}
-
 	function generate_hex_to_biner (hex) {
     	return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-8);
 	}
-
 	function getPermutasion(permutasion, plain) {
 		hasil = []
 		for(var i = 0; i < permutasion.length; i++){
@@ -76,7 +71,6 @@
 		}
 		return hasil
 	}
-
 	function plain (plainText) {
 		permutasion_first = [58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8, 57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7]
 		plainText = generate_desimal_to_biner(plainText)
@@ -90,25 +84,47 @@
 		plain =  plain.join('')
 		return plain
 	}
-
 	function shift_key (key) {
 		shift_index = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
-		key_16 = []
-		for(var i = 0; i < shift_index; i++){
-			key = putar(shift_index[i], key)	
-			key_16[i] = key
+		var key_16=[]
+		var keysementara=key
+		for(var i = 0; i < shift_index.length; i++){
+			keysementara = putar(shift_index[i], key)	
+			key=keysementara
+			keyfix=key[0]+key[1]
+			key_16[i] = keyfix
 		} 
+		return key_16
 	}
-
 	function putar (shift, key) {
 		// shift = 2
 		// key[0] ="01010101"
 		// key[1] = "11010101001"
+		
+		
+		var c=key[0]
+		var d=key[1]
+		var sementara1=c[0]
+		var sementara2=d[0]
+		console.log(c)
+		for (var i = 0; i < shift; i++) {
+			c=c.slice(1, 28)
+			d=d.slice(1, 28)
+			
+			c+=sementara1
+			d+=sementara2
+			sementara1=c[0]
+			sementara2=d[0]
+		}
+		
+		key[0]=c
+		key[1]=d
+		
 		return key
 	}
-
 	function keying (key) {
 		permutation1=[57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36, 63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 45, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4]
+		permutation2=[14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2, 41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32]
 		key = key.match(/\S+/g);
 		for(var i = 0; i < key.length; i++) {
 			key[i] = generate_hex_to_biner(key[i])
@@ -119,10 +135,14 @@
 		key=key.join('')
 		key = key.match(/.{1,28}/g);
 		key = shift_key(key)
-
+		for(i=0; i<key.length; i++)
+		{
+			key[i]=getPermutasion(permutation2, key[i])
+			key[i]=key[i].join('')
+		}
+		
 		return key
 	}
-
 </script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
