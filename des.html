@@ -148,24 +148,42 @@
 
 	function encryptDES(plainDES, key) {
 		var expand=[32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17, 16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1]
-		
-		var sem1=plainDES[0]
-		var sem2=plainDES[1]
-		console.log(sem1)
-		console.log(sem2)
-		plainDES[1]=getPermutasion(expand, plainDES[1])
-		plainDES[1]=plainDES[1].join('')
-		var fungsi=fungs(plainDES[1], key[0])
-		var hasilnya=[]
-		for(var i=0; i<fungsi.length; i++)
+		var finalPermutation=[40, 8, 48, 16, 56, 24, 64, 32, 39, 7, 47, 15, 55, 23, 63, 31, 38, 6, 46, 14, 54, 22, 62, 30, 37, 5, 45, 13, 53, 21, 61, 29, 36, 4, 44, 12, 52, 20, 60, 28, 35, 3, 43, 11, 51, 19, 59, 27, 34, 2, 42, 10, 50, 18, 58, 26, 33, 1, 41, 9, 49, 17, 57, 25]
+		for(var je=0; je<16; je++)
 		{
-			hasilnya[i]=sem1[i]^fungsi[i]
+			var sem1=plainDES[0]
+			var sem2=plainDES[1]
+			// console.log(sem1)
+			// console.log(sem2)
+			plainDES[1]=getPermutasion(expand, plainDES[1])
+			// console.log(plainDES[1])
+			plainDES[1]=plainDES[1].join('')
+			var fungsi=fungs(plainDES[1], key[je])
+			
+			var hasilnya=[]
+			for(var i=0; i<fungsi.length; i++)
+			{
+				hasilnya[i]=sem1[i]^fungsi[i]
+			}
+			hasilnya=hasilnya.join('')
+			if(je==15)
+			{
+				plainDES[0]=hasilnya
+				plainDES[1]=sem2
+			}
+			else{
+				plainDES[0]=sem2
+				plainDES[1]=hasilnya
+			}
+			
+			
+			// plainText[1]=fungsi
 		}
-		hasilnya=hasilnya.join('')
-		plainDES[0]=sem2
-		plainDES[1]=hasilnya
+		plainDES=plainDES.join('')
 		console.log(plainDES)
-		// plainText[1]=fungsi
+		plainDES=getPermutasion(finalPermutation, plainDES)
+		plainDES=plainDES.join('')
+		console.log(plainDES)
 		return plainDES
 	}
 
