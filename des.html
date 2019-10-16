@@ -32,14 +32,23 @@
 	  <div id="tabel">
 	  	<table id="kotak"></table>
 	  </div>
-	  
-	  
 	</form>
 </body>
 <script>
 	function enkrip() {
-		var key = document.getElementById("key").value;
-		biner = generate_to_biner(key)
+		permutasion_first = [58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8, 57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7]
+		var plainText = document.getElementById("plainText").value;
+		plainText = generate_to_biner(plainText)
+		plain =  plainText.join('')
+		if (plain.length<64) {
+			var selisih = 64 - plain.length 
+		}
+		x="0"
+		plain = plain.concat(x.repeat(selisih))
+		console.log(plain)
+		plain = getPermutasion(permutasion_first, plain)
+		console.log(plain)
+
 	}
 
 	function generate_to_biner(key) {
@@ -49,6 +58,15 @@
 		    biner.push(new Array(8-x.length+1).join("0") + x);
 		}
 		return biner
+	}
+
+	function getPermutasion(permutasion, plain) {
+		hasil = []
+		for(var i = 0; i < permutasion.length; i++){
+			hasil[i] = plain[permutasion[i]-1]
+			console.log(permutasion[i], plain[permutasion[i]-1])
+		}
+		return hasil
 	}
 
 </script>
