@@ -36,22 +36,26 @@
 </body>
 <script>
 	function enkrip() {
-		permutasion_first = [58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8, 57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7]
 		var plainText = document.getElementById("plainText").value;
-		plainText = generate_to_biner(plainText)
-		plain =  plainText.join('')
-		if (plain.length<64) {
-			var selisih = 64 - plain.length 
-		}
-		x="0"
-		plain = plain.concat(x.repeat(selisih))
-		console.log(plain)
-		plain = getPermutasion(permutasion_first, plain)
-		console.log(plain)
+		plainText = plain(plainText)
+		// console.log(plainText)
 
+		var key=document.getElementById("key").value;
+		var keyBaru=keying(key)
+		console.log(keyBaru)
+		// plainText = generate_to_biner(plainText)
+
+		// plain =  plainText.join('')
+		// if (plain.length<64) {
+		// 	var selisih = 64 - plain.length 
+		// }
+		// x="0"
+		// plain = plain.concat(x.repeat(selisih))
+		// // console.log(plain)
+		// plain = getPermutasion(permutasion_first, plain)
 	}
 
-	function generate_to_biner(key) {
+	function generate_desimal_to_biner(key) {
 		var biner = []
 		for (var i = 0; i < key.length; i++) {
 		    x = key[i].charCodeAt(0).toString(2);
@@ -60,13 +64,63 @@
 		return biner
 	}
 
+	function generate_hex_to_biner (hex) {
+    	return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-8);
+	}
+
 	function getPermutasion(permutasion, plain) {
 		hasil = []
 		for(var i = 0; i < permutasion.length; i++){
 			hasil[i] = plain[permutasion[i]-1]
-			console.log(permutasion[i], plain[permutasion[i]-1])
+			// console.log(permutasion[i], plain[permutasion[i]-1])
 		}
 		return hasil
+	}
+
+	function plain (plainText) {
+		permutasion_first = [58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8, 57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7]
+		plainText = generate_desimal_to_biner(plainText)
+		plain =  plainText.join('')
+		if (plain.length<64) {
+			var selisih = 64 - plain.length 
+		}
+		x="0"
+		plain = plain.concat(x.repeat(selisih))
+		plain = getPermutasion(permutasion_first, plain)
+		plain =  plain.join('')
+		return plain
+	}
+
+	function shift_key (key) {
+		shift_index = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
+		key_16 = []
+		for(var i = 0; i < shift_index; i++){
+			key = putar(shift_index[i], key)	
+			key_16[i] = key
+		} 
+	}
+
+	function putar (shift, key) {
+		// shift = 2
+		// key[0] ="01010101"
+		// key[1] = "11010101001"
+		return key
+	}
+
+	function keying (key) {
+		permutation1=[57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36, 63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 45, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4]
+		key = key.match(/\S+/g);
+		for(var i = 0; i < key.length; i++) {
+			key[i] = generate_hex_to_biner(key[i])
+			// console.log(key[i])
+		}			
+		key=key.join('')
+		key = getPermutasion(permutation1, key)
+		key=key.join('')
+		key = key.match(/.{1,28}/g);
+		key = shift_key(key)
+
+		return key
 	}
 
 </script>
@@ -75,4 +129,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </html>
 
-<!-- https://stackoverflow.com/questions/14430633/how-to-convert-text-to-binary-code-in-javascript -->
+<!-- https://stackoverflow.com/questions/14430633/how-to-convert-text-to-binary-code-in-javascript
+https://stackoverflow.com/questions/14912502/how-do-i-split-a-string-by-whitespace-and-ignoring-leading-and-trailing-whitespa
+https://stackoverflow.com/questions/7033639/split-large-string-in-n-size-chunks-in-javascript -->
