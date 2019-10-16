@@ -144,14 +144,15 @@
 		for(i=0; i<plain_text.length; i+=2)
 		{
 			console.log(plain_text.length-i);
-			if(plain_text.length-i==1)
+			if(plain_text.length%2==1)
 			{
-				console.log("hehe");
-				plain_text+="X";
+				hasil="Ciphertext bukan dari PlayFair cipher";
+				return hasil;
 			}
 			if(plain_text[i]==plain_text[i+1])
 			{
-				plain_text = [plain_text.slice(0, i+1), 'X', plain_text.slice(i+1)].join('');
+				hasil="Ciphertext bukan dari PlayFair cipher";
+				return hasil;
 			}
 
 			for(row=0; row<box.length; row++)
