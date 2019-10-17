@@ -11,49 +11,59 @@
 		td  {
 		  border: 1px dashed blue;
 		  padding: 10px;
+		  min-width: 40px;
+		  text-align: center;
 		}
 	  </style>
 </head>
 <body>
-	<div>
-		Play Fair Cipher
+	<div class="container-fluid mt-3">
+		<div class="row">
+		    <div class="col-sm-6">
+				<h2>
+					Play Fair Cipher
+				</h2>
+				<form class="mb-5">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Key</label>
+				    <input type="text" class="form-control" id="key" aria-describedby="key" placeholder="Key">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">Text yang mau di enkrip atau dekrip</label>
+				    <input type="text" class="form-control" id="plainText" placeholder="Text">
+				  </div>
+				  <div>
+				  	<button type="button" class="btn btn-primary" onclick="enkrip()">Enkrip</button>
+				  	<button type="button" class="btn btn-primary" onclick="dekrip()">Dekrip</button>
+				  	<button type="button" class="btn btn-primary" onclick="showTable()">Lihat Tabel</button>
+				  </div>
+				</form>
+				<div class="form-group">
+				    <p id="hasil"></p>
+				</div>
+		    </div>
+		    <div class="col-sm">
+				<div id="tabel">
+				  	<table id="kotak"></table>
+				</div>
+		    </div>
+		    <!-- <div class="col-sm">
+		    </div> -->
+		</div>
 	</div>
-	<form>
-	  <div class="form-group">
-	    <label for="exampleInputEmail1">Key</label>
-	    <input type="text" class="form-control" id="key" aria-describedby="key" placeholder="Key">
-	  </div>
-	  <div class="form-group">
-	    <label for="exampleInputPassword1">Text yang mau di enkrip atau dekrip</label>
-	    <input type="text" class="form-control" id="plainText" placeholder="Text">
-	  </div>
-	  <div>
-	  	<button type="button" class="btn btn-primary" onclick="enkrip()">Enkrip</button>
-	  	<button type="button" class="btn btn-primary" onclick="dekrip()">Dekrip</button>
-	  	<button type="button" class="btn btn-primary" onclick="showTable()">Lihat Tabel</button>
-	  </div>
-	  <div id="tabel">
-	  	<table id="kotak"></table>
-	  </div>
-	  <div class="form-group">
-	    <p id="hasil"></p>
-	  </div>
-	  
-	  
-	</form>
 </body>
 <script>
 	idx = []
 	function enkrip() {
-		
 		var key = document.getElementById("key").value;
 		box = generate_key(key);
 		var plain_text = document.getElementById("plainText").value;
 		var hasil = enkrip_play_fair(box, plain_text); 
 		console.log(idx);
 		console.log(hasil);
-		hasil_spasi = addWhiteSpace(idx, hasil)
-		document.getElementById("hasil").innerHTML = hasil;
+		hasil_spasi = addWhiteSpace(idx, hasil);
+		hasil_spasi = "<b>Hasil Enkripsi : </b>"+hasil_spasi;
+		document.getElementById("hasil").innerHTML = hasil_spasi;
 		return true;
 	}
 	
@@ -74,9 +84,12 @@
 		var plain_text = document.getElementById("plainText").value;
 		var hasil = dekrip_play_fair(box, plain_text); 
 		console.log(hasil);
-		document.getElementById("hasil").innerHTML = hasil;
+		hasil_spasi = addWhiteSpace(idx, hasil);
+		hasil_spasi = "<b>Hasil Dekripsi : </b>"+hasil_spasi;
+		document.getElementById("hasil").innerHTML = hasil_spasi;
 		return true;
 	}
+
 	function generate_key(key) {
 		key = key.toUpperCase();
 		key = key.replace(/\s/g, "") //remove whitespace
@@ -92,12 +105,14 @@
 		console.log(box);
 		return box;
 	}
+
 	function removeDuplicateCharacters(string) {
 	  	return string.split('').filter(function(item, pos, self) {
 	      return self.indexOf(item) == pos;
 	    })
 	    .join('');
 	}
+
 	function getIndexWhiteSpace(str) {
 		index = 0,
 		res = [];
@@ -106,6 +121,7 @@
 		}
 		return res;
 	}
+	
 	function enkrip_play_fair(box, plain_text) {
 		var row, col, x1,y1,x2,y2, hasil=[];
 		plain_text = plain_text.toUpperCase();
@@ -143,23 +159,18 @@
 				}
 			}
 			if(x1==x2)
-			{
 				hasil=hasil+box[(y1+1)%5][x1]+box[(y2+1)%5][x2];
-			}
 			else if(y1==y2)
-			{
 				hasil=hasil+box[y1][(x1+1)%5]+box[y2][(x2+1)%5];
-			}
 			else
-			{
 				hasil=hasil+box[y1][x2]+box[y2][x1];
-			}
 		}	
 		return hasil;
 	}
 	function dekrip_play_fair(box, plain_text) {
 		var row, col, x1,y1,x2,y2, hasil=[];
 		plain_text = plain_text.toUpperCase();
+		idx = getIndexWhiteSpace(plain_text)
 		plain_text = plain_text.replace(/\s/g, "") //remove whitespace
 		plain_text = plain_text.replace(/[^a-zA-Z ]/g, ""); //remove unique character
 		plain_text = plain_text.replace(/J/g, "I"); // remove j => i
@@ -210,10 +221,9 @@
 				hasil=hasil+box[y1][x2]+box[y2][x1];
 			}
 		}
-		
-		
 		return hasil;
 	}
+
 	function showTable(){
 		document.getElementById("kotak").remove();
 		var row, tr, td, tn;
@@ -224,10 +234,10 @@
 		for (row = 0; row < box.length; row++){
 			tr = document.createElement('tr');
 			for (col = 0; col < box[row].length; col++){
-			td = document.createElement('td');
-			tn = document.createTextNode(box[row][col]);
-			td.appendChild(tn);
-			tr.appendChild(td);
+				td = document.createElement('td');
+				tn = document.createTextNode(box[row][col]);
+				td.appendChild(tn);
+				tr.appendChild(td);
 			}
 			tab.appendChild(tr);
 		}
