@@ -43,18 +43,32 @@
 	</form>
 </body>
 <script>
+	idx = []
 	function enkrip() {
 		
 		var key = document.getElementById("key").value;
 		box = generate_key(key);
 		var plain_text = document.getElementById("plainText").value;
 		var hasil = enkrip_play_fair(box, plain_text); 
+		console.log(idx);
 		console.log(hasil);
+		hasil_spasi = addWhiteSpace(idx, hasil)
 		document.getElementById("hasil").innerHTML = hasil;
 		return true;
 	}
+	
+	function addWhiteSpace(index, str) {
+		String.prototype.splice = function(idx, rem, str) {
+		    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+		};
+		for(var i = 0;  i < index.length; i++){
+			str = str.splice(index[i],0," ")
+			// console.log(str)
+		}
+		return str
+	}
+
 	function dekrip() {
-		
 		var key = document.getElementById("key").value;
 		box = generate_key(key);
 		var plain_text = document.getElementById("plainText").value;
@@ -84,9 +98,19 @@
 	    })
 	    .join('');
 	}
+	function getIndexWhiteSpace(str) {
+		index = 0,
+		res = [];
+		while ((index = str.indexOf(' ', index + 1)) > 0) {
+		    res.push(index);
+		}
+		return res;
+	}
 	function enkrip_play_fair(box, plain_text) {
 		var row, col, x1,y1,x2,y2, hasil=[];
 		plain_text = plain_text.toUpperCase();
+		idx = getIndexWhiteSpace(plain_text)
+		// console.log(idx)
 		plain_text = plain_text.replace(/\s/g, "") //remove whitespace
 		plain_text = plain_text.replace(/[^a-zA-Z ]/g, ""); //remove unique character
 		plain_text = plain_text.replace(/J/g, "I"); // remove j => i
@@ -130,9 +154,7 @@
 			{
 				hasil=hasil+box[y1][x2]+box[y2][x1];
 			}
-		}
-		
-		
+		}	
 		return hasil;
 	}
 	function dekrip_play_fair(box, plain_text) {
@@ -223,4 +245,5 @@ https://stackoverflow.com/questions/14930516/compare-two-javascript-arrays-and-r
 https://stackoverflow.com/questions/1584370/how-to-merge-two-arrays-in-javascript-and-de-duplicate-items
 https://stackoverflow.com/questions/13272406/convert-string-with-commas-to-array
 https://stackoverflow.com/questions/22464605/convert-a-1d-array-to-2d-array
-https://stackoverflow.com/questions/6555182/remove-all-special-characters-except-space-from-a-string-using-javascript/6555220  -->
+https://stackoverflow.com/questions/6555182/remove-all-special-characters-except-space-from-a-string-using-javascript/6555220
+http://rumkin.com/tools/cipher/playfair.php  -->
